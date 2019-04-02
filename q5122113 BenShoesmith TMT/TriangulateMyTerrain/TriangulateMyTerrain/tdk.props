@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup>
+    <Import Project="*.vars.props" />
+    <Import Project="$(SolutionDir)*.vars.props" />
+  </ImportGroup>
+  <PropertyGroup Label="TdkVars">
+    <TdkBaseConfiguration Condition="'$(TdkBaseConfiguration)'==''">$(Configuration)</TdkBaseConfiguration>
+    <TdkIncSubPath Condition="'$(TdkIncSubPath)'==''">include\</TdkIncSubPath>
+    <TdkLocalIncSubPath Condition="'$(TdkLocalIncSubPath)'==''">$(TdkIncSubPath)</TdkLocalIncSubPath>
+    <TdkDocSubPath Condition="'$(TdkDocSubPath)'==''">doc\</TdkDocSubPath>
+    <TdkLocalDocSubPath Condition="'$(TdkLocalDocSubPath)'==''">$(TdkDocSubPath)</TdkLocalDocSubPath>
+    <TdkResSubPath Condition="'$(TdkResSubPath)'==''">res\</TdkResSubPath>
+    <TdkLocalResSubPath Condition="'$(TdkLocalResSubPath)'==''">$(TdkResSubPath)</TdkLocalResSubPath>
+	
+    <TdkProjectBuildDir Condition="'$(TdkProjectBuildDir)'==''">build\</TdkProjectBuildDir>
+    <TdkSolutionBuildDir Condition="'$(TdkSolutionBuildDir)'==''">$(SolutionDir)build\</TdkSolutionBuildDir>
+    <TdkPubDir Condition="'$(TdkPubDir)'==''">$(SolutionDir)pub\</TdkPubDir>
+    <TdkContentDir Condition="'$(TdkContentDir)'==''">$(SolutionDir)content\</TdkContentDir>
+    <TdkTestDataDir Condition="'$(TdkTestDataDir)'==''">$(SolutionDir)testdata\</TdkTestDataDir>
+    <TdkPackagesDir Condition="'$(TdkPackagesDir)'==''">$(SolutionDir)external\</TdkPackagesDir>
+
+    <TdkBinSubPath Condition="'$(TdkBinSubPath)'==''">bin\$(Platform)\$(TdkBaseConfiguration)\</TdkBinSubPath>
+    <TdkLibSubPath Condition="'$(TdkLibSubPath)'==''">lib\$(Platform)\$(TdkBaseConfiguration)\$(PlatformToolset)\</TdkLibSubPath>
+    <TdkImpSubPath Condition="'$(TdkImpSubPath)'==''">lib\$(Platform)\$(TdkBaseConfiguration)\</TdkImpSubPath>
+    <TdkUniBinSubPath Condition="'$(TdkUniBinSubPath)'==''">bin\$(Platform)\</TdkUniBinSubPath>
+    <TdkUniImpSubPath Condition="'$(TdkUniImpSubPath)'==''">lib\$(Platform)\</TdkUniImpSubPath>
+    <TdkIntSubPath Condition="'$(TdkIntSubPath)'==''">int\$(Platform)\$(TdkBaseConfiguration)\</TdkIntSubPath>
+    <TdkSolutionBinDir Condition="'$(TdkSolutionBinDir)'==''">$(TdkSolutionBuildDir)$(TdkBinSubPath)</TdkSolutionBinDir>
+    <TdkSolutionUniBinDir Condition="'$(TdkSolutionUniBinDir)'==''">$(TdkSolutionBuildDir)$(TdkUniBinSubPath)</TdkSolutionUniBinDir>
+    <TdkSolutionResDir Condition="'$(TdkSolutionResDir)'==''">$(TdkSolutionBuildDir)$(TdkResSubPath)</TdkSolutionResDir>
+    <TdkPackagesBinDir Condition="'$(TdkPackagesBinDir)'==''">$(TdkPackagesDir)$(TdkBinSubPath)</TdkPackagesBinDir>
+    <TdkPackagesUniBinDir Condition="'$(TdkPackagesUniBinDir)'==''">$(TdkPackagesDir)$(TdkUniBinSubPath)</TdkPackagesUniBinDir>
+    <TdkPackagesResDir Condition="'$(TdkPackagesResDir)'==''">$(TdkPackagesDir)$(TdkResSubPath)</TdkPackagesResDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(ConfigurationType)'!='StaticLibrary'">
+    <TdkOutSubPath>$(TdkBinSubPath)</TdkOutSubPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(ConfigurationType)'=='StaticLibrary'">
+    <TdkOutSubPath>$(TdkLibSubPath)</TdkOutSubPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutDir>$(TdkSolutionBuildDir)$(TdkOutSubPath)</OutDir>
+    <IntDir>$(TdkProjectBuildDir)$(TdkIntSubPath)</IntDir>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerWorkingDirectory>$(OutDir)</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(TdkBaseConfiguration)'=='Debug'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(TdkBaseConfiguration)'=='Release'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(TdkLocalIncSubPath);$(TdkSolutionBuildDir)$(TdkIncSubPath);$(TdkPackagesDir)$(TdkIncSubPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName)-vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(TdkSolutionBuildDir)$(TdkLibSubPath);$(TdkSolutionBuildDir)$(TdkUniImpSubPath);$(TdkSolutionBuildDir)$(TdkImpSubPath);$(TdkPackagesDir)$(TdkLibSubPath);$(TdkPackagesDir)$(TdkUniImpSubPath);$(TdkPackagesDir)$(TdkImpSubPath);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <ImportLibrary>$(TdkSolutionBuildDir)$(TdkImpSubPath)$(TargetName).lib</ImportLibrary>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+	  <ProgramDataBaseFile>$(OutDir)$(TargetName).pdb</ProgramDataBaseFile>
+    </Link>
+    <Lib>
+      <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ImportGroup>
+    <Import Project="*.lib.props" />
+    <Import Project="this.props" Condition="Exists('this.props')" />
+  </ImportGroup>
+</Project>

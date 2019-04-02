@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Platform)'=='x64'">
+    <TdkNvtxName>nvToolsExt64_1</TdkNvtxName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='Win32'">
+    <TdkNvtxName>nvToolsExt32_1</TdkNvtxName>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TdkUseNvtx)'=='true'">
+    <TdkDll Include="$(TdkPackagesUniBinDir)$(TdkNvtxName).dll" />
+  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(TdkUseNvtx)'=='true'">
+    <Link>
+      <AdditionalDependencies>$(TdkNvtxName).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ClCompile>
+      <PreprocessorDefinitions>TDK_NVTX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+</Project>

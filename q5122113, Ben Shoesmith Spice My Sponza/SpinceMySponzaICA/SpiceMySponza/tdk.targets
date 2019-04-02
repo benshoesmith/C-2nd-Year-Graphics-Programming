@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <TdkDocFiles Include="$(TdkLocalDocSubPath)**/*.*"/>
+    <TdkResFiles Include="$(TdkLocalResSubPath)**/*.*"/>
+    <TdkIncFiles Include="$(TdkLocalIncSubPath)**/*.*"/>
+    <TdkAppFiles Include="@(TdkResFiles)"/>
+    <TdkAppFiles Include="@(TdkRes)"/>
+	<TdkAppFiles Include="@(TdkDll)"/>
+	<TdkAppFiles Include="@(TdkDocFiles)"/>
+  </ItemGroup>
+
+  <Target Name="TdkCopyAppFiles" Condition="'$(ConfigurationType)'=='Application'" Inputs="@(TdkAppFiles)" Outputs="@(TdkAppFiles->'$(OutDir)%(Filename)%(Extension)')">
+    <Message Text="Copying app files to build directory... @(TdkAppFiles)" Importance="high" />
+    <Copy SourceFiles="@(TdkAppFiles)" DestinationFiles="@(TdkAppFiles->'$(OutDir)%(Filename)%(Extension)')" />
+  </Target>
+  <Target Name="TdkCopyDocFiles" Condition="'$(ConfigurationType)'!='Application'" Inputs="@(TdkDocFiles)" Outputs="@(TdkDocFiles->'$(TdkSolutionBuildDir)$(TdkDocSubPath)%(RecursiveDir)%(Filename)%(Extension)')">
+    <Message Text="Copying doc files to build directory... @(TdkDocFiles)" Importance="high" />
+    <Copy SourceFiles="@(TdkDocFiles)" DestinationFiles="@(TdkDocFiles->'$(TdkSolutionBuildDir)$(TdkDocSubPath)%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+  <Target Name="TdkCopyIncFiles" Condition="'$(ConfigurationType)'!='Application'" Inputs="@(TdkIncFiles)" Outputs="@(TdkIncFiles->'$(TdkSolutionBuildDir)$(TdkIncSubPath)%(RecursiveDir)%(Filename)%(Extension)')">
+    <Message Text="Copying include files to build directory... @(TdkIncFiles)" Importance="high" />
+    <Copy SourceFiles="@(TdkIncFiles)" DestinationFiles="@(TdkIncFiles->'$(TdkSolutionBuildDir)$(TdkIncSubPath)%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+  <Target Name="TdkCopyResFiles" Condition="'$(ConfigurationType)'!='Application'" Inputs="@(TdkResFiles)" Outputs="@(TdkResFiles->'$(TdkSolutionBuildDir)$(TdkResSubPath)%(RecursiveDir)%(Filename)%(Extension)')">
+    <Message Text="Copying resource files to build directory... @(TdkResFiles)" Importance="high" />
+    <Copy SourceFiles="@(TdkResFiles)" DestinationFiles="@(TdkResFiles->'$(TdkSolutionBuildDir)$(TdkResSubPath)%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+
+  <PropertyGroup>
+    <BuildDependsOn>
+      $(BuildDependsOn);
+      TdkCopyAppFiles;
+      TdkCopyDocFiles;
+	  TdkCopyIncFiles;
+	  TdkCopyResFiles
+    </BuildDependsOn>
+  </PropertyGroup>
+  
+  <Import Project="*.lib.targets"/>
+  
+</Project>
